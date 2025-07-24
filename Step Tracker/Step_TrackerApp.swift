@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct Step_TrackerApp: App {
     
-    let hkManager = HealthManager()
+    let hkManager = HealthKitManager()
     
     var body: some Scene {
         WindowGroup {

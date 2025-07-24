@@ -10,24 +10,23 @@ import Charts
 
 enum HealthMetricContext: CaseIterable, Identifiable {
     case steps, weight
-    
     var id: Self { self }
     
     var title: String {
-        return switch self {
+        switch self {
         case .steps:
-            "Steps"
+            return "Steps"
         case .weight:
-            "Weight"
+            return "Weight"
         }
     }
 }
 
 struct DashboardView: View {
     
-    @Environment(HealthManager.self) private var hkManager
-    @AppStorage("hasSeenPermissionPriming") private var hasSeenPermissionPriming: Bool = false
-    @State private var isShowingPermissionPrimingSheet: Bool = false
+    @Environment(HealthKitManager.self) private var hkManager
+    @AppStorage("hasSeenPermissionPriming") private var hasSeenPermissionPriming = false
+    @State private var isShowingPermissionPrimingSheet = false
     @State private var selectedStat: HealthMetricContext = .steps
     @State private var rawSelectedDate: Date?
     var isSteps: Bool { selectedStat == .steps }
@@ -35,7 +34,7 @@ struct DashboardView: View {
     var avgStepCount: Double {
         guard !hkManager.stepData.isEmpty else { return 0 }
         let totalSteps = hkManager.stepData.reduce(0) { $0 + $1.value }
-        return Double(totalSteps) / Double(hkManager.stepData.count)
+        return totalSteps/Double(hkManager.stepData.count)
     }
     
     var selectedHealthMetric: HealthMetric? {
@@ -49,10 +48,9 @@ struct DashboardView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    
                     Picker("Selected Stat", selection: $selectedStat) {
-                        ForEach(HealthMetricContext.allCases) { metric in
-                            Text(metric.title)
+                        ForEach(HealthMetricContext.allCases) {
+                            Text($0.title)
                         }
                     }
                     .pickerStyle(.segmented)
@@ -82,28 +80,22 @@ struct DashboardView: View {
                                 RuleMark(x: .value("Selected Metric", selectedHealthMetric.date, unit: .day))
                                     .foregroundStyle(Color.secondary.opacity(0.3))
                                     .offset(y: -10)
-                                    .annotation(
-                                        position: .top,
-                                        spacing: 0,
-                                        overflowResolution: .init(
-                                            x: .fit(to: .chart),
-                                            y: .disabled
-                                        )) {
-                                            annotationView
-                                        }
+                                    .annotation(position: .top,
+                                                spacing: 0,
+                                                overflowResolution: .init(x: .fit(to: .chart), y: .disabled)) { annotationView }
                             }
                             
                             RuleMark(y: .value("Average", avgStepCount))
                                 .foregroundStyle(Color.secondary)
                                 .lineStyle(.init(lineWidth: 1, dash: [5]))
                             
-                            ForEach(hkManager.stepData) { step in
+                            ForEach(hkManager.stepData) { steps in
                                 BarMark(
-                                    x: .value("Date", step.date, unit: .day),
-                                    y: .value("Steps", step.value)
+                                    x: .value("Date", steps.date, unit: .day),
+                                    y: .value("Steps", steps.value)
                                 )
                                 .foregroundStyle(Color.pink.gradient)
-//                                .opacity(rawSelectedDate == nil || step.date == selectedHealthMetric ? 1 : 0.3)
+                                .opacity(rawSelectedDate == nil || steps.date == selectedHealthMetric?.date ? 1.0 : 0.3)
                             }
                         }
                         .frame(height: 150)
@@ -142,11 +134,9 @@ struct DashboardView: View {
                             .frame(height: 240)
                     }
                     .padding()
-                    .background(RoundedRectangle(cornerRadius: 12)
-                        .fill(Color(.secondarySystemBackground)))
+                    .background(RoundedRectangle(cornerRadius: 12).fill(Color(.secondarySystemBackground)))
                 }
             }
-            .scrollIndicators(.never)
             .padding()
             .task {
                 await hkManager.fetchStepCount()
@@ -156,31 +146,24 @@ struct DashboardView: View {
             .navigationDestination(for: HealthMetricContext.self) { metric in
                 HealthDataListView(metric: metric)
             }
-            .sheet(isPresented: $isShowingPermissionPrimingSheet) {
+            .sheet(isPresented: $isShowingPermissionPrimingSheet, onDismiss: {
                 // fetch health data
-            } content: {
+            }, content: {
                 HealthKitPermissionPrimingView(hasSeen: $hasSeenPermissionPriming)
-            }
-            
+            })
         }
         .tint(isSteps ? .pink : .indigo)
     }
     
     var annotationView: some View {
         VStack(alignment: .leading) {
-            Text(
-                selectedHealthMetric?.date ?? .now,
-                format: .dateTime.weekday(.abbreviated).month(.abbreviated).day()
-            )
-            .font(.footnote.bold())
-            .foregroundStyle(.secondary)
+            Text(selectedHealthMetric?.date ?? .now, format: .dateTime.weekday(.abbreviated).month(.abbreviated).day())
+                .font(.footnote.bold())
+                .foregroundStyle(.secondary)
             
-            Text(
-                selectedHealthMetric?.value ?? 0,
-                format: .number.precision(.fractionLength(0))
-            )
-            .fontWeight(.heavy)
-            .foregroundStyle(.pink)
+            Text(selectedHealthMetric?.value ?? 0, format: .number.precision(.fractionLength(0)))
+                .fontWeight(.heavy)
+                .foregroundStyle(.pink)
         }
         .padding(12)
         .background(
@@ -193,5 +176,5 @@ struct DashboardView: View {
 
 #Preview {
     DashboardView()
-        .environment(HealthManager())
+        .environment(HealthKitManager())
 }

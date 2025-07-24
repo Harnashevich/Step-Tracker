@@ -10,7 +10,7 @@ import HealthKitUI
 
 struct HealthKitPermissionPrimingView: View {
     
-    @Environment(HealthManager.self) private var hkManager
+    @Environment(HealthKitManager.self) private var hkManager
     @Environment(\.dismiss) private var dissmiss
     @State private var isShowingHealthKitPermissions = false
     @Binding var hasSeen: Bool
@@ -68,5 +68,5 @@ struct HealthKitPermissionPrimingView: View {
 
 #Preview {
     HealthKitPermissionPrimingView(hasSeen: .constant(true))
-        .environment(HealthManager())
+        .environment(HealthKitManager())
 }

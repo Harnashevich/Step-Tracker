@@ -1,5 +1,5 @@
 //
-//  HealthManager.swift
+//  HealthKitManager.swift
 //  Step Tracker
 //
 //  Created by Andrei Harnashevich on 15.07.25.
@@ -9,7 +9,7 @@ import Foundation
 import HealthKit
 import Observation
 
-@Observable class HealthManager {
+@Observable class HealthKitManager {
     
     let store = HKHealthStore()
     let types: Set = [
