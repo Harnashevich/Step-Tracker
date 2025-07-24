@@ -13,11 +13,11 @@ enum HealthMetricContext: CaseIterable, Identifiable {
     var id: Self { self }
     
     var title: String {
-        switch self {
+        return switch self {
         case .steps:
-            return "Steps"
+            "Steps"
         case .weight:
-            return "Weight"
+            "Weight"
         }
     }
 }
