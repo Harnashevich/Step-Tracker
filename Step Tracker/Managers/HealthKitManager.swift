@@ -79,7 +79,7 @@ import Observation
     func addSimulatorData() async {
         var mockSamples: [HKQuantitySample] = []
         
-        for i in 0..<28 {
+        for i in 0..<8 {
             let stepQuantity = HKQuantity(unit: .count(), doubleValue: .random(in: 4_000...20_000))
             let weightQuanity = HKQuantity(unit: .pound(), doubleValue: .random(in: (160 + Double(i/3)...165 + Double(i/3))) )
             let startDate = Calendar.current.date(byAdding: .day, value: -i, to: .now)!
@@ -103,9 +103,6 @@ import Observation
             mockSamples.append(weightSample)
         }
         try! await store.save(mockSamples)
-        
-        
-        
         print("✅ Dummy Data sent up")
     }
 }
