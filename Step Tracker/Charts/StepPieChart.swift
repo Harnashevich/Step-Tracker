@@ -9,6 +9,8 @@ import SwiftUI
 import Charts
 
 struct StepPieChart: View {
+    
+    @State private var rawSelectedChartValue: Double?
 
     var chartData: [WeekdayChartData]
 
@@ -35,10 +37,14 @@ struct StepPieChart: View {
                     .cornerRadius(6)
                 }
             }
+            .chartAngleSelection(value: $rawSelectedChartValue)
             .frame(height: 240)
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: 12).fill(Color(.secondarySystemBackground)))
+        .onChange(of: rawSelectedChartValue) { oldValue, newValue in
+            print(newValue)
+        }
     }
 }
 
