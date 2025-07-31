@@ -10,7 +10,7 @@ import Charts
 
 struct StepPieChart: View {
     
-    @State private var rawSelectedChartValue: Double?
+    @State private var rawSelectedChartValue: Double? = 0
     
     var selectedWeekday: WeekdayChartData? {
         guard let rawSelectedChartValue else { return nil }
@@ -21,9 +21,9 @@ struct StepPieChart: View {
             return rawSelectedChartValue <= total
         }
     }
-
+    
     var chartData: [WeekdayChartData]
-
+    
     var body: some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
@@ -39,14 +39,13 @@ struct StepPieChart: View {
             
             Chart {
                 ForEach(chartData) { weekday in
-                    SectorMark(
-                        angle: .value("Average Steps", weekday.value),
-                        innerRadius: .ratio(0.6),
-                        outerRadius: selectedWeekday?.date.weekdayInt == weekday.date.weekdayInt ? 140 : 110,
-                        angularInset: 1)
+                    SectorMark(angle: .value("Average Steps", weekday.value),
+                               innerRadius: .ratio(0.618),
+                               outerRadius: selectedWeekday?.date.weekdayInt == weekday.date.weekdayInt ? 140 : 110,
+                               angularInset: 1)
                     .foregroundStyle(.pink.gradient)
                     .cornerRadius(6)
-                    .opacity(selectedWeekday?.date.weekdayInt == weekday.date.weekdayInt ? 1 : 0.3)
+                    .opacity(selectedWeekday?.date.weekdayInt == weekday.date.weekdayInt ? 1.0 : 0.3)
                 }
             }
             .chartAngleSelection(value: $rawSelectedChartValue.animation(.easeInOut))
@@ -59,7 +58,7 @@ struct StepPieChart: View {
                             VStack {
                                 Text(selectedWeekday.date.weekdayTitle)
                                     .font(.title3.bold())
-                                    .contentTransition(.opacity)
+                                    .contentTransition(.identity)
                                 
                                 Text(selectedWeekday.value, format: .number.precision(.fractionLength(0)))
                                     .fontWeight(.medium)
