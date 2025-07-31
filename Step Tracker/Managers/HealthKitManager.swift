@@ -81,7 +81,7 @@ import Observation
         
         for i in 0..<8 {
             let stepQuantity = HKQuantity(unit: .count(), doubleValue: .random(in: 4_000...20_000))
-            let weightQuanity = HKQuantity(unit: .pound(), doubleValue: .random(in: (160 + Double(i/3)...165 + Double(i/3))) )
+            let weightQuanity = HKQuantity(unit: .pound(), doubleValue: .random(in: (160 + Double(i/3)...165 + Double(i/3))))
             let startDate = Calendar.current.date(byAdding: .day, value: -i, to: .now)!
             let endDate = Calendar.current.date(byAdding: .day, value: 1, to: startDate)!
             
