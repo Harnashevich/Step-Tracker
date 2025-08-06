@@ -73,6 +73,7 @@ struct StepPieChart: View {
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: 12).fill(Color(.secondarySystemBackground)))
+        .sensoryFeedback(.selection, trigger: selectedWeekday?.value)
     }
 }
 
