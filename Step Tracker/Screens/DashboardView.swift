@@ -52,6 +52,7 @@ struct DashboardView: View {
                     }
                 }
             }
+            .scrollIndicators(.hidden)
             .padding()
             .task {
                 do {
