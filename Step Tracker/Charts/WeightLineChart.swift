@@ -27,26 +27,13 @@ struct WeightLineChart: View {
     }
     
     var body: some View {
-        VStack {
-            NavigationLink(value: selectedStat) {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Label("Weight", systemImage: "figure")
-                            .font(.title3.bold())
-                            .foregroundStyle(.indigo)
-                        
-                        Text("Avg: 180 lbs")
-                            .font(.caption)
-                    }
-                    
-                    Spacer()
-                    
-                    Image(systemName: "chevron.right")
-                }
-            }
-            .foregroundStyle(.secondary)
-            .padding(.bottom, 12)
-            
+        ChartContainer(
+            title: "Weight",
+            symbol: "figure",
+            subtitle: "Avg: 180 lbs",
+            context: .weight,
+            isNav: true
+        ) {
             if chartData.isEmpty {
                 ChartEmptyView(
                     systemImageName: "chart.line.downtrend.xyaxis",
@@ -59,10 +46,13 @@ struct WeightLineChart: View {
                         RuleMark(x: .value("Selected Metric", selectedHealthMetric.date, unit: .day))
                             .foregroundStyle(Color.secondary.opacity(0.3))
                             .offset(y: -10)
-                            .annotation(position: .top,
-                                        spacing: 0,
-                                        overflowResolution: .init(x: .fit(to: .chart), y: .disabled)) { annotationView }
+                            .annotation(
+                                position: .top,
+                                spacing: 0,
+                                overflowResolution: .init(x: .fit(to: .chart), y: .disabled)
+                            ) { annotationView }
                     }
+                    
                     RuleMark(y: .value("Goal", 155))
                         .foregroundStyle(.mint)
                         .lineStyle(.init(lineWidth: 1, dash: [5]))
@@ -74,6 +64,7 @@ struct WeightLineChart: View {
                             yEnd: .value("Min Value", minValue)
                         )
                         .foregroundStyle(Gradient(colors: [.indigo.opacity(0.5), .clear]))
+                        .interpolationMethod(.catmullRom)
                         
                         LineMark(
                             x: .value("Day", weight.date, unit: .day),
@@ -101,8 +92,6 @@ struct WeightLineChart: View {
                 }
             }
         }
-        .padding()
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(.secondarySystemBackground)))
         .sensoryFeedback(.selection, trigger: selectedHealthMetric?.value)
     }
     

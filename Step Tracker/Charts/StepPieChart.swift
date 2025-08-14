@@ -25,18 +25,13 @@ struct StepPieChart: View {
     var chartData: [WeekdayChartData]
     
     var body: some View {
-        VStack(alignment: .leading) {
-            VStack(alignment: .leading) {
-                Label("Averages", systemImage: "calendar")
-                    .font(.title3.bold())
-                    .foregroundStyle(.pink)
-                
-                Text("Last 28 Days")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .padding(.bottom, 12)
-            
+        ChartContainer(
+            title: "Averages",
+            symbol: "calendar",
+            subtitle: "Last 28 Days",
+            context: .steps,
+            isNav: false
+        ) {
             if chartData.isEmpty {
                 ChartEmptyView(
                     systemImageName: "chart.pie",
@@ -46,10 +41,12 @@ struct StepPieChart: View {
             } else {
                 Chart {
                     ForEach(chartData) { weekday in
-                        SectorMark(angle: .value("Average Steps", weekday.value),
-                                   innerRadius: .ratio(0.618),
-                                   outerRadius: selectedWeekday?.date.weekdayInt == weekday.date.weekdayInt ? 140 : 110,
-                                   angularInset: 1)
+                        SectorMark(
+                            angle: .value("Average Steps", weekday.value),
+                            innerRadius: .ratio(0.618),
+                            outerRadius: selectedWeekday?.date.weekdayInt == weekday.date.weekdayInt ? 140 : 110,
+                            angularInset: 1
+                        )
                         .foregroundStyle(.pink.gradient)
                         .cornerRadius(6)
                         .opacity(selectedWeekday?.date.weekdayInt == weekday.date.weekdayInt ? 1.0 : 0.3)
@@ -79,12 +76,10 @@ struct StepPieChart: View {
                 }
             }
         }
-        .padding()
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(.secondarySystemBackground)))
         .sensoryFeedback(.selection, trigger: selectedWeekday?.value)
     }
 }
 
 #Preview {
-    StepPieChart(chartData: ChartMath.averageWeekdayCount(for: []))
+    StepPieChart(chartData: ChartMath.averageWeekdayCount(for: MockData.steps))
 }

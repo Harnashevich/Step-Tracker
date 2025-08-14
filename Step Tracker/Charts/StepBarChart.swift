@@ -29,26 +29,13 @@ struct StepBarChart: View {
     }
     
     var body: some View {
-        VStack {
-            NavigationLink(value: selectedStat) {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Label("Steps", systemImage: "figure.walk")
-                            .font(.title3.bold())
-                            .foregroundStyle(.pink)
-                        
-                        Text("Avg: \(Int(avgStepCount)) steps")
-                            .font(.caption)
-                    }
-                    
-                    Spacer()
-                    
-                    Image(systemName: "chevron.right")
-                }
-            }
-            .foregroundStyle(.secondary)
-            .padding(.bottom, 12)
-            
+        ChartContainer(
+            title: "Steps",
+            symbol: "figure.walk",
+            subtitle: "Avg: \(Int(avgStepCount)) steps",
+            context: .steps,
+            isNav: true
+        ) {
             if chartData.isEmpty {
                 ChartEmptyView(
                     systemImageName: "chart.bar",
@@ -61,9 +48,11 @@ struct StepBarChart: View {
                         RuleMark(x: .value("Selected Metric", selectedHealthMetric.date, unit: .day))
                             .foregroundStyle(Color.secondary.opacity(0.3))
                             .offset(y: -10)
-                            .annotation(position: .top,
-                                        spacing: 0,
-                                        overflowResolution: .init(x: .fit(to: .chart), y: .disabled)) { annotationView }
+                            .annotation(
+                                position: .top,
+                                spacing: 0,
+                                overflowResolution: .init(x: .fit(to: .chart), y: .disabled)
+                            ) { annotationView }
                     }
                     
                     RuleMark(y: .value("Average", avgStepCount))
@@ -96,8 +85,6 @@ struct StepBarChart: View {
                 }
             }
         }
-        .padding()
-        .background(RoundedRectangle(cornerRadius: 12).fill(Color(.secondarySystemBackground)))
         .sensoryFeedback(.selection, trigger: selectedHealthMetric?.value)
     }
     
