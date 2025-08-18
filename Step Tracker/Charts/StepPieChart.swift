@@ -25,13 +25,15 @@ struct StepPieChart: View {
     var chartData: [DateValueChartData]
     
     var body: some View {
-        ChartContainer(
+        let config = ChartContainerConfiguration(
             title: "Averages",
             symbol: "calendar",
             subtitle: "Last 28 Days",
             context: .steps,
             isNav: false
-        ) {
+        )
+        
+        ChartContainer(config: config) {
             if chartData.isEmpty {
                 ChartEmptyView(
                     systemImageName: "chart.pie",
