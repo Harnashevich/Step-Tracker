@@ -50,9 +50,9 @@ struct HealthKitPermissionPrimingView: View {
             trigger: isShowingHealthKitPermissions
         ) { result in
             switch result {
-            case .success(_):
+            case .success:
                 dismiss()
-            case .failure(_):
+            case .failure:
                 // handle the error later
                 dismiss()
             }

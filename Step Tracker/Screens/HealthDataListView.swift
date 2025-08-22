@@ -57,7 +57,7 @@ struct HealthDataListView: View {
                 switch writeError {
                 case .authNotDetermined, .noData, .unableToCompleteRequest, .invalidValue:
                     EmptyView()
-                case .sharingDenied(_):
+                case .sharingDenied:
                     Button("Settings") {
                         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                     }

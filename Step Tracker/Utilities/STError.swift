@@ -18,7 +18,7 @@ enum STError: LocalizedError {
         switch self {
         case .authNotDetermined:
             "Need Access to Health Data"
-        case .sharingDenied(_):
+        case .sharingDenied:
             "No Write Access"
         case .noData:
             "No Data"
