@@ -15,3 +15,6 @@ The project is based on the iOS Academy course.
 • Firebase storage and authentication
 
 ![imgonline-com-ua-2to1-umd81TtszhIYFn](https://github.com/user-attachments/assets/be3c98e3-1e3d-44e6-9660-84d5c14bbf48)
+
+
+<img width="512" height="512" alt="appstore1024" src="https://github.com/user-attachments/assets/949e2036-90e8-4280-92c5-d9d34315c818" />
