@@ -8,6 +8,7 @@ The project is based on the Sean Allen course.
 • Apple HealthKit integration <br />
 • Interactive charts <br />
 • Concurrent data fetching <br />
+• Haptic feedback <br />
 • Polished UI/UX
 
 ## Technology stack
