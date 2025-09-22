@@ -51,10 +51,10 @@ struct HealthKitPermissionPrimingView: View {
         ) { result in
             switch result {
             case .success:
-                dismiss()
+                Task { @MainActor in dismiss() }
             case .failure:
                 // handle the error later
-                dismiss()
+                Task { @MainActor in dismiss() }
             }
         }
     }

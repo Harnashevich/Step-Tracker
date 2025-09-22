@@ -9,15 +9,21 @@ import Foundation
 import HealthKit
 import Observation
 
-@Observable class HealthKitManager {
-    
-    let store = HKHealthStore()
-    
-    let types: Set = [HKQuantityType(.stepCount), HKQuantityType(.bodyMass)]
+@Observable
+@MainActor
+final class HealthKitData: Sendable {
     
     var stepData: [HealthMetric] = []
     var weightData: [HealthMetric] = []
     var weightDiffData: [HealthMetric] = []
+}
+
+@Observable
+final class HealthKitManager: Sendable {
+    
+    let store = HKHealthStore()
+    
+    let types: Set = [HKQuantityType(.stepCount), HKQuantityType(.bodyMass)]
     
     func fetchStepCount() async throws -> [HealthMetric] {
         guard store.authorizationStatus(for: HKQuantityType(.stepCount)) != .notDetermined else {
@@ -27,10 +33,12 @@ import Observation
         let interval = createDateInterval(from: .now, daysBack: 28)
         let queryPredicate = HKQuery.predicateForSamples(withStart: interval.start, end: interval.end)
         let samplePredicate = HKSamplePredicate.quantitySample(type: HKQuantityType(.stepCount), predicate: queryPredicate)
-        let stepsQuery = HKStatisticsCollectionQueryDescriptor(predicate: samplePredicate,
-                                                               options: .cumulativeSum,
-                                                               anchorDate: interval.end,
-                                                               intervalComponents: .init(day: 1))
+        let stepsQuery = HKStatisticsCollectionQueryDescriptor(
+            predicate: samplePredicate,
+            options: .cumulativeSum,
+            anchorDate: interval.end,
+            intervalComponents: .init(day: 1)
+        )
         do {
             let stepCounts = try await stepsQuery.result(for: store)
             return stepCounts.statistics().map {
@@ -51,10 +59,12 @@ import Observation
         let interval = createDateInterval(from: .now, daysBack: daysBack)
         let queryPredicate = HKQuery.predicateForSamples(withStart: interval.start, end: interval.end)
         let samplePredicate = HKSamplePredicate.quantitySample(type: HKQuantityType(.bodyMass), predicate: queryPredicate)
-        let weightQuery = HKStatisticsCollectionQueryDescriptor(predicate: samplePredicate,
-                                                                options: .mostRecent,
-                                                                anchorDate: interval.end,
-                                                                intervalComponents: .init(day: 1))
+        let weightQuery = HKStatisticsCollectionQueryDescriptor(
+            predicate: samplePredicate,
+            options: .mostRecent,
+            anchorDate: interval.end,
+            intervalComponents: .init(day: 1)
+        )
         
         do {
             let weights = try await weightQuery.result(for: store)
