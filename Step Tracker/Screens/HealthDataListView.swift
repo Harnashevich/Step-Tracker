@@ -11,6 +11,7 @@ struct HealthDataListView: View {
 
     @Environment(HealthKitData.self) private var hkData
     @Environment(HealthKitManager.self) private var hkManager
+    @Namespace var zoomTransition
     @State private var isShowingAddData = false
     @State private var isShowingAlert = false
     @State private var writeError: STError = .noData
@@ -22,6 +23,10 @@ struct HealthDataListView: View {
     var listData: [HealthMetric] {
         metric == .steps ? hkData.stepData : hkData.weightData
     }
+    
+    var metricColor: Color {
+        metric == .steps ? .pink : .indigo
+    }
 
     var body: some View {
         List(listData.reversed()) { data in
@@ -31,16 +36,35 @@ struct HealthDataListView: View {
                 Text(data.date, format: .dateTime.month().day().year())
                     .accessibilityLabel(data.date.accesibilityDate)
             }
+            .listRowBackground(Color(.secondarySystemBackground).opacity(0.35))
             .accessibilityElement(children: .combine)
         }
         .navigationTitle(metric.title)
+        .scrollContentBackground(.hidden)
+        .background(LinearGradient(
+            colors: [metricColor.opacity(0.25), .clear],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing))
         .sheet(isPresented: $isShowingAddData) {
             addDataView
+                .presentationDetents([.fraction(0.4)])
+                .scrollContentBackground(.hidden)
+                .navigationTransition(.zoom(sourceID: "addData", in: zoomTransition))
+        }
+        .overlay {
+            if listData.isEmpty {
+                ContentUnavailableView("No \(metric.title) to Display", systemImage: metric == .steps ? "figure.walk" : "figure")
+            }
         }
         .toolbar {
-            Button("Add Data", systemImage: "plus") {
-                isShowingAddData = true
+            ToolbarItem {
+                Button("Add Data", systemImage: "plus") {
+                    isShowingAddData = true
+                }
+                .buttonStyle(.glassProminent)
+                .tint(metricColor)
             }
+            .matchedTransitionSource(id: "addData", in: zoomTransition)
         }
     }
     
@@ -56,6 +80,7 @@ struct HealthDataListView: View {
                 }
             }
             .navigationTitle(metric.title)
+            .navigationBarTitleDisplayMode(.inline)
             .alert(isPresented: $isShowingAlert, error: writeError) { writeError in
                 switch writeError {
                 case .authNotDetermined, .noData, .unableToCompleteRequest, .invalidValue:
@@ -72,13 +97,14 @@ struct HealthDataListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Add Data") {
+                    Button(role: .confirm) {
                         addDataToHealthKit()
                     }
+                    .tint(metricColor)
                 }
                 
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Dismiss") {
+                    Button(role: .close) {
                         isShowingAddData = false
                     }
                 }

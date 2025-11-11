@@ -10,7 +10,6 @@ import HealthKit
 import Observation
 
 @Observable
-@MainActor
 final class HealthKitData: Sendable {
     
     var stepData: [HealthMetric] = []
@@ -22,7 +21,6 @@ final class HealthKitData: Sendable {
 final class HealthKitManager: Sendable {
     
     let store = HKHealthStore()
-    
     let types: Set = [HKQuantityType(.stepCount), HKQuantityType(.bodyMass)]
     
     func fetchStepCount() async throws -> [HealthMetric] {

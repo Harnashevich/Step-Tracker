@@ -14,6 +14,8 @@ The project is based on the Sean Allen course.
 ## Technology stack
 
 • SwiftUI <br />
+• Updated to iOS 26 <br />
+• Foundation Model <br />
 • HealthKit <br />
 • Swift Charts <br />
 • Swift Algorithms <br />
