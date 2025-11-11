@@ -22,9 +22,5 @@ The project is based on the Sean Allen course.
 • DocC <br />
 • Git & GitHub <br />
 
-![imgonline-com-ua-2to1-umd81TtszhIYFn](https://github.com/user-attachments/assets/be3c98e3-1e3d-44e6-9660-84d5c14bbf48)
-
 ![imgonline-com-ua-2to1-Cgce6IFYt8KFyDXI](https://github.com/user-attachments/assets/bc1ee7a6-184b-4f8f-a11f-7a1f431bc8f8)
-
 ![imgonline-com-ua-2to1-OD3a2HmIYmAzTB](https://github.com/user-attachments/assets/205789cc-ca1e-4dff-af47-cd692dbd44fb)
-
