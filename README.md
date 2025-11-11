@@ -7,15 +7,15 @@ The project is based on the Sean Allen course.
 
 • Apple HealthKit integration <br />
 • Interactive charts <br />
+• Foundation Model <br />
 • Concurrent data fetching <br />
 • Haptic feedback <br />
 • Polished UI/UX
+• Updated to iOS 26 <br />
 
 ## Technology stack
 
 • SwiftUI <br />
-• Updated to iOS 26 <br />
-• Foundation Model <br />
 • HealthKit <br />
 • Swift Charts <br />
 • Swift Algorithms <br />
