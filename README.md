@@ -10,7 +10,7 @@ The project is based on the Sean Allen course.
 • Foundation Model <br />
 • Concurrent data fetching <br />
 • Haptic feedback <br />
-• Polished UI/UX
+• Polished UI/UX <br />
 • Updated to iOS 26 <br />
 
 ## Technology stack
